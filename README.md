@@ -211,6 +211,14 @@ node --experimental-strip-types -e 'import("./index.ts").then(() => console.log(
 
 Project layout: `index.ts` (single-file extension), `package.json`, `README.md`.
 
+To push updates to GitHub, switch `gh` to the owning account first (repo-local git config already uses it as author):
+
+```sh
+gh auth switch -u gladenko
+git push
+gh auth switch -u gianluca-rettore-unipd   # restore your previous account
+```
+
 ## Credits and license
 
 Derived from the *pi-lightweight-status-bar* concept (status-line provider metrics for Pi), reduced to a single NanoGPT-focused status. MIT licensed — see [LICENSE](LICENSE).
