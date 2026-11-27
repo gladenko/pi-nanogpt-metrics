@@ -1,6 +1,6 @@
 # pi-nanogpt-metrics
 
-A minimal [Pi](https://github.com/earendil-works/pi-coding-agent) extension that shows provider metrics — **balance, weekly/daily usage quotas, and the renewal/reset date** — as one extra status line. It only registers a status through Pi's public API, so it appears in the **official Pi status bar**, in **[pi-open-tui](https://www.npmjs.com/package/pi-open-tui)**'s footer (as a third row), and in any other UI plugin that renders extension statuses. It never patches or replaces the host UI.
+A minimal [Pi](https://github.com/earendil-works/pi-coding-agent) extension that shows provider metrics — **balance, weekly/daily usage quotas, and the renewal/reset date** — as one extra status line. Designed for [NanoGPT](https://nano-gpt.com/r/fJzL4yYd), and configurable for any provider. It only registers a status through Pi's public API, so it appears in the **official Pi status bar**, in **[pi-open-tui](https://www.npmjs.com/package/pi-open-tui)**'s footer (as a third row), and in any other UI plugin that renders extension statuses. It never patches or replaces the host UI.
 
 Example status line (Italian):
 
@@ -60,7 +60,7 @@ Then restart Pi. Verify with `pi list`; the status line appears on the next sess
    }
    ```
 
-2. Create `~/.pi/status-bar.yaml` with at least one provider (this example uses the official NanoGPT API):
+2. Create `~/.pi/status-bar.yaml` with at least one provider (this example uses the official [NanoGPT](https://nano-gpt.com/r/fJzL4yYd) API):
 
    ```yaml
    providers:
@@ -221,10 +221,10 @@ gh auth switch -u gianluca-rettore-unipd   # restore your previous account
 
 ## Support this project
 
-If this extension is useful, consider signing up to NanoGPT with the author's referral link: you get **5% off eligible usage**, and it supports the maintenance of this project. The `/metrics` menu has a **Referral** item that opens the same link in your browser.
+If this extension is useful, consider signing up to [NanoGPT](https://nano-gpt.com/r/fJzL4yYd) with the author's referral link: you get **5% off eligible usage**, and it supports the maintenance of this project. The `/metrics` menu has a **Referral** item that opens the same link in your browser.
 
 **[Sign up to NanoGPT](https://nano-gpt.com/r/fJzL4yYd)**
 
 ## Credits and license
 
-Derived from the *pi-lightweight-status-bar* concept (status-line provider metrics for Pi), reduced to a single NanoGPT-focused status. MIT licensed — see [LICENSE](LICENSE).
+Derived from the *pi-lightweight-status-bar* concept (status-line provider metrics for Pi), reduced to a single [NanoGPT](https://nano-gpt.com/r/fJzL4yYd)-focused status. MIT licensed — see [LICENSE](LICENSE).
