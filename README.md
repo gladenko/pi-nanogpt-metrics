@@ -219,6 +219,12 @@ git push
 gh auth switch -u gianluca-rettore-unipd   # restore your previous account
 ```
 
+## Support this project
+
+If this extension is useful, consider signing up to NanoGPT with the author's referral link: you get **5% off eligible usage**, and it supports the maintenance of this project.
+
+**[Sign up to NanoGPT](https://nano-gpt.com/r/fJzL4yYd)**
+
 ## Credits and license
 
 Derived from the *pi-lightweight-status-bar* concept (status-line provider metrics for Pi), reduced to a single NanoGPT-focused status. MIT licensed — see [LICENSE](LICENSE).
