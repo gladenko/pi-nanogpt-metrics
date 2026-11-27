@@ -1,7 +1,10 @@
 import { getAgentDir, readStoredCredential, type ExtensionAPI, type ExtensionContext, type Theme, type ThemeColor } from "@earendil-works/pi-coding-agent";
 import * as fs from "node:fs";
 import * as path from "node:path";
+import { spawn } from "node:child_process";
 import { parse as parseYaml } from "yaml";
+
+const REFERRAL_URL = "https://nano-gpt.com/r/fJzL4yYd";
 
 type DataPath = "balance" | "usage" | "subscriptionModels" | "paidModels";
 type Route = {
@@ -60,6 +63,7 @@ type Labels = {
   menuUseLitellm: string;
   menuRemoveToken: string;
   menuLanguage: string;
+  menuReferral: string;
   menuClose: string;
   tokenPromptTitle: string;
   tokenPromptPlaceholder: string;
@@ -67,6 +71,8 @@ type Labels = {
   notifyTokenRemoved: string;
   notifyLitellmSaved: string;
   notifyNoLitellm: string;
+  notifyReferralOpened: string;
+  notifyReferralFailed: string;
 };
 type LabelOverrides = Partial<Labels>;
 type DiscoveredLanguage = { name?: string; overrides: LabelOverrides };
@@ -97,6 +103,7 @@ const EN_LABELS: Labels = {
   menuUseLitellm: "Use LiteLLM key",
   menuRemoveToken: "Remove stored token",
   menuLanguage: "Language…",
+  menuReferral: "Referral: support the project",
   menuClose: "Close",
   tokenPromptTitle: "Provider metrics token",
   tokenPromptPlaceholder: "Paste the token (stored in statusbar-config.json, chmod 600)",
@@ -104,6 +111,8 @@ const EN_LABELS: Labels = {
   notifyTokenRemoved: "Token removed",
   notifyLitellmSaved: "LiteLLM key saved as provider metrics token",
   notifyNoLitellm: "No LiteLLM key found (log in first with /login litellm, or set LITELLM_API_KEY)",
+  notifyReferralOpened: "Referral link opened in your browser: {url}",
+  notifyReferralFailed: "Could not open the browser — referral link: {url}",
 };
 const IT_LABELS: Labels = {
   languageName: "Italiano",
@@ -131,6 +140,7 @@ const IT_LABELS: Labels = {
   menuUseLitellm: "Usa chiave LiteLLM",
   menuRemoveToken: "Rimuovi token salvato",
   menuLanguage: "Lingua…",
+  menuReferral: "Referral: sostieni il progetto",
   menuClose: "Chiudi",
   tokenPromptTitle: "Token metriche provider",
   tokenPromptPlaceholder: "Incolla il token (salvato in statusbar-config.json, chmod 600)",
@@ -138,6 +148,8 @@ const IT_LABELS: Labels = {
   notifyTokenRemoved: "Token rimosso",
   notifyLitellmSaved: "Chiave LiteLLM salvata come token delle metriche",
   notifyNoLitellm: "Nessuna chiave LiteLLM trovata (fai prima il login con /login litellm o imposta LITELLM_API_KEY)",
+  notifyReferralOpened: "Link referral aperto nel browser: {url}",
+  notifyReferralFailed: "Impossibile aprire il browser — link referral: {url}",
 };
 const BUILTIN_LANGUAGES: Record<string, Labels> = { it: IT_LABELS, en: EN_LABELS };
 const LABEL_KEYS: ReadonlySet<string> = new Set(Object.keys(EN_LABELS));
@@ -368,6 +380,18 @@ function saveToken(value: string | undefined): void {
 }
 function saveLanguage(value: string): void {
   updateNanoConfig((nanogpt) => { nanogpt.language = value; });
+}
+/** Open a URL with the OS default browser. Returns false only when the spawn itself fails. */
+function openExternal(url: string, onError: () => void): void {
+  try {
+    const command = process.platform === "darwin" ? "open" : process.platform === "win32" ? "cmd" : "xdg-open";
+    const args = process.platform === "win32" ? ["/c", "start", "", url] : [url];
+    const child = spawn(command, args, { detached: true, stdio: "ignore" });
+    child.on("error", onError);
+    child.unref();
+  } catch {
+    onError();
+  }
 }
 function formatBalance(state: Status, unit: string, labels: Labels): string[] {
   const parts: string[] = [];
@@ -644,6 +668,7 @@ export default function providerMetrics(pi: ExtensionAPI): void {
         labels.menuUseLitellm,
         labels.menuRemoveToken,
         labels.menuLanguage,
+        labels.menuReferral,
         labels.menuClose,
       ]);
       if (!action || action === labels.menuClose) return;
@@ -682,6 +707,9 @@ export default function providerMetrics(pi: ExtensionAPI): void {
           saveLanguage(code);
           reload(ctx, true);
         }
+      } else if (action === labels.menuReferral) {
+        openExternal(REFERRAL_URL, () => ctx.ui.notify(labels.notifyReferralFailed.replace("{url}", REFERRAL_URL), "warning"));
+        ctx.ui.notify(labels.notifyReferralOpened.replace("{url}", REFERRAL_URL), "info");
       }
     }
   }
