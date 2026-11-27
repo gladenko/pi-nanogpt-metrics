@@ -1,0 +1,28 @@
+{
+  "name": "pi-nanogpt-metrics",
+  "version": "0.1.0",
+  "description": "Pi extension showing provider metrics — balance, usage quotas, renewal date — as one extra status line for the official Pi bar or any other UI.",
+  "type": "module",
+  "license": "MIT",
+  "author": "gladenko <gladenko@gladenko.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gladenko/pi-nanogpt-metrics.git"
+  },
+  "keywords": ["pi-extension", "nanogpt", "provider-metrics", "status-line"],
+  "pi": {
+    "extensions": ["./index.ts"]
+  },
+  "peerDependencies": {
+    "@earendil-works/pi-coding-agent": "*"
+  },
+  "dependencies": {
+    "yaml": "^2.9.1"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit --target ES2022 --module NodeNext --moduleResolution NodeNext --skipLibCheck index.ts"
+  }
+}
